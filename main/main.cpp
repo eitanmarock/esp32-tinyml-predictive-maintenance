@@ -258,8 +258,8 @@ void classify_motor_state(float* my_fft_array) {
         gpio_set_level(LED_RED_PIN, 1);
 
         // Uncomment to actually cut power to the motor on critical fault:
-        // ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, 0);
-        // ledc_update_duty(LEDC_MODE, LEDC_CHANNEL);
+        ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, 0);
+        ledc_update_duty(LEDC_MODE, LEDC_CHANNEL);
     }
 }
 

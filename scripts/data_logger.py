@@ -6,9 +6,9 @@ import os
 COM_PORT = 'COM11'
 BAUD_RATE = 115200
 
-# *** תיקון: ה-ESP32 שולח חצי מ-BUFFER_SIZE אחרי חישוב ה-FFT ***
+# *** Fix: the ESP32 sends half of BUFFER_SIZE after computing the FFT ***
 BUFFER_SIZE = 256
-NUM_BINS = BUFFER_SIZE // 2  # 128 תאים
+NUM_BINS = BUFFER_SIZE // 2  # 128 bins
 
 def log_data():
     try:
@@ -24,7 +24,7 @@ def log_data():
         with open(csv_file_path, mode='w', newline='') as file:
             writer = csv.writer(file)
 
-            # כותרות לפי כמות התדרים (128 עמודות)
+            # Headers based on the number of frequency bins (128 columns)
             headers = ["Timestamp"] + [f"Freq_Bin_{i}" for i in range(NUM_BINS)]
             writer.writerow(headers)
             file.flush()
@@ -33,7 +33,7 @@ def log_data():
                 if ser.in_waiting > 0:
                     raw_line = ser.readline().decode('utf-8', errors='ignore').strip()
 
-                    # סינון שורות ריקות
+                    # Filter out empty lines
                     if not raw_line:
                         continue
 
@@ -44,12 +44,12 @@ def log_data():
 
                     data_points = raw_line.split(',')
 
-                    # *** תיקון: בודקים התאמה ל-128 ערכים ***
+                    # *** Fix: check that we got exactly 128 values ***
                     if len(data_points) == NUM_BINS:
                         try:
                             float_values = [float(val) for val in data_points]
 
-                            # *** תיקון: איפוס תדר 0 (כוח המשיכה) כדי לא ללכלך את ה-Dataset ***
+                            # *** Fix: zero out bin 0 (gravity / DC) so it doesn't pollute the dataset ***
                             float_values[0] = 0.0
 
                             now = time.time()

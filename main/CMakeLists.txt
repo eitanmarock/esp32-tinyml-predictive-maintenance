@@ -1,11 +1,11 @@
-# סריקה אוטומטית של כל קבצי הבינה המלאכותית
+# Automatically scan all AI model files
 file(GLOB_RECURSE edge_impulse_sources
         "edge_ai_model/*.cpp"
         "edge_ai_model/*.c"
         "edge_ai_model/*.cc"
 )
 
-# רישום הרכיבים לקומפיילר (שימו לב שעכשיו כתוב main.cpp)
+# Register the components with the compiler (note that it now says main.cpp)
 idf_component_register(
         SRCS "main.cpp" ${edge_impulse_sources}
         INCLUDE_DIRS "."
@@ -15,8 +15,8 @@ idf_component_register(
         "edge_ai_model/tflite-model"
 )
 
-# אופטימיזציה למהירות מקסימלית של המעבד
-# אופטימיזציה למהירות מקסימלית + ביטול אזהרות קשוחות של הקומפיילר
+# Optimization for maximum CPU speed
+# Optimization for maximum speed + disabling strict compiler warnings
 target_compile_options(${COMPONENT_LIB} PRIVATE
         "-O3"
         "-Wno-error"
